@@ -2,17 +2,13 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getRules, deleteRule, breakRule } from "../store/slices/ruleSlice";
 import { Scale, Trash2, ShieldAlert } from "lucide-react";
+import Loading from "../components/Loading";
 
 const Rules = () => {
   const dispatch = useDispatch();
   const { rules, isLoading } = useSelector((state) => state.rules);
 
-  if (isLoading && rules.length === 0)
-    return (
-      <div className="text-center p-8 text-warning font-medium animate-pulse">
-        Loading Rules...
-      </div>
-    );
+  if (isLoading && rules.length === 0) return <Loading />;
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">

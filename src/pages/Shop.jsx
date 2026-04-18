@@ -6,18 +6,14 @@ import {
   deleteShopItem,
 } from "../store/slices/shopSlice";
 import { ShoppingCart, Trash2, Package } from "lucide-react";
+import Loading from "../components/Loading";
 
 const Shop = () => {
   const dispatch = useDispatch();
   const { items, isLoading } = useSelector((state) => state.shop);
   const { user } = useSelector((state) => state.auth);
 
-  if (isLoading && items.length === 0)
-    return (
-      <div className="text-center p-8 text-secondary font-medium animate-pulse">
-        Loading Shop...
-      </div>
-    );
+  if (isLoading && items.length === 0) return <Loading />;
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">

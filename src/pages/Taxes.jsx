@@ -2,13 +2,13 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getTaxes, applyTax, deleteTax } from "../store/slices/taxSlice";
 import { AlertOctagon, Trash2 } from "lucide-react";
+import Loading from "../components/Loading";
 
 const Taxes = () => {
   const dispatch = useDispatch();
   const { taxes, isLoading } = useSelector((state) => state.taxes);
 
-  if (isLoading)
-    return <div className="text-center p-8 text-danger">Loading Taxes...</div>;
+  if (isLoading) return <Loading />;
 
   return (
     <div className="space-y-6">
