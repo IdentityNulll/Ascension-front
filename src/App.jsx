@@ -1,20 +1,30 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { useEffect } from 'react';
-import { getMe } from './store/slices/authSlice';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { getMe } from "./store/slices/authSlice";
 
 // Pages
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Dashboard from './pages/Dashboard';
-import Quests from './pages/Quests';
-import Shop from './pages/Shop';
-import Taxes from './pages/Taxes';
-import Rules from './pages/Rules';
-import Records from './pages/Records';
-import Profile from './pages/Profile';
-import AddItems from './pages/AddItems';
-import Layout from './components/Layout';
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+import Quests from "./pages/Quests";
+import Shop from "./pages/Shop";
+import Taxes from "./pages/Taxes";
+import Rules from "./pages/Rules";
+import Records from "./pages/Records";
+import Profile from "./pages/Profile";
+import AddItems from "./pages/AddItems";
+import Layout from "./components/Layout";
+import { getQuests } from "./store/slices/questSlice";
+import { getRecords } from "./store/slices/recordSlice";
+import { getShopItems } from "./store/slices/shopSlice";
+import { getTaxes } from "./store/slices/taxSlice";
+import { getRules } from "./store/slices/ruleSlice";
 
 function App() {
   const dispatch = useDispatch();
@@ -23,15 +33,27 @@ function App() {
   useEffect(() => {
     if (token) {
       dispatch(getMe());
+      dispatch(getQuests());
+      dispatch(getRecords());
+      dispatch(getShopItems());
+      dispatch(getTaxes());
+      dispatch(getRules());
+
     }
   }, [token, dispatch]);
 
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={!token ? <Login /> : <Navigate to="/" />} />
-        <Route path="/register" element={!token ? <Register /> : <Navigate to="/" />} />
-        
+        <Route
+          path="/login"
+          element={!token ? <Login /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/register"
+          element={!token ? <Register /> : <Navigate to="/" />}
+        />
+
         {/* Protected Routes */}
         <Route path="/" element={token ? <Layout /> : <Navigate to="/login" />}>
           <Route index element={<Dashboard />} />

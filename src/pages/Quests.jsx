@@ -1,16 +1,12 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getQuests, incrementQuest, decrementQuest, resetQuest, deleteQuest } from '../store/slices/questSlice';
-import { Plus, Minus, RotateCcw, Trash2, Filter } from 'lucide-react';
+import { Plus, Minus, RotateCcw, Trash2, Filter, Target } from 'lucide-react';
 
 const Quests = () => {
   const dispatch = useDispatch();
   const { quests, isLoading } = useSelector((state) => state.quests);
   const [activeFilter, setActiveFilter] = useState('all');
-
-  useEffect(() => {
-    dispatch(getQuests());
-  }, [dispatch]);
 
   const categories = useMemo(() => {
     const cats = new Set(quests.map(q => q.category?.toLowerCase() || 'other'));
