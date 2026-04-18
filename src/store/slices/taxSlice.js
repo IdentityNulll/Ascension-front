@@ -20,15 +20,6 @@ export const createTax = createAsyncThunk('taxes/create', async (data, thunkAPI)
   }
 });
 
-export const updateTax = createAsyncThunk('taxes/update', async ({ id, data }, thunkAPI) => {
-  try {
-    const res = await api.put(`/taxes/${id}`, data);
-    return res.data;
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error.response?.data?.message || error.message);
-  }
-});
-
 export const deleteTax = createAsyncThunk('taxes/delete', async (id, thunkAPI) => {
   try {
     const res = await api.delete(`/taxes/${id}`);
@@ -48,9 +39,19 @@ export const applyTax = createAsyncThunk('taxes/apply', async (id, thunkAPI) => 
   }
 });
 
+const handlePendingAction = (state, action) => {
+  state.pendingActions.push({ id: action.meta.arg, type: action.type.split('/')[1] });
+};
+
+const handleFulfilledOrRejectedAction = (state, action) => {
+  state.pendingActions = state.pendingActions.filter(
+    (pending) => !(pending.id === action.meta.arg && pending.type === action.type.split('/')[1])
+  );
+};
+
 const taxSlice = createSlice({
   name: 'taxes',
-  initialState: { taxes: [], isLoading: false },
+  initialState: { taxes: [], isLoading: false, pendingActions: [] },
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -58,17 +59,21 @@ const taxSlice = createSlice({
       .addCase(getTaxes.fulfilled, (state, action) => { state.isLoading = false; state.taxes = action.payload; })
       .addCase(getTaxes.rejected, (state) => { state.isLoading = false; })
       .addCase(createTax.fulfilled, (state, action) => { state.taxes.unshift(action.payload); })
-      .addCase(updateTax.fulfilled, (state, action) => {
-        const index = state.taxes.findIndex(i => i._id === action.payload._id);
-        if (index !== -1) state.taxes[index] = action.payload;
-      })
+      
+      .addCase(deleteTax.pending, handlePendingAction)
       .addCase(deleteTax.fulfilled, (state, action) => {
+        handleFulfilledOrRejectedAction(state, action);
         state.taxes = state.taxes.filter(i => i._id !== action.payload.id);
       })
+      .addCase(deleteTax.rejected, handleFulfilledOrRejectedAction)
+      
+      .addCase(applyTax.pending, handlePendingAction)
       .addCase(applyTax.fulfilled, (state, action) => {
+        handleFulfilledOrRejectedAction(state, action);
         const index = state.taxes.findIndex(t => t._id === action.payload.tax._id);
         if (index !== -1) state.taxes[index] = action.payload.tax;
-      });
+      })
+      .addCase(applyTax.rejected, handleFulfilledOrRejectedAction);
   }
 });
 

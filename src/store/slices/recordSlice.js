@@ -10,6 +10,15 @@ export const getRecords = createAsyncThunk('records/getAll', async (_, thunkAPI)
   }
 });
 
+export const clearRecords = createAsyncThunk('records/clear', async (_, thunkAPI) => {
+  try {
+    const res = await api.delete('/records');
+    return res.data;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response?.data?.message || error.message);
+  }
+});
+
 const recordSlice = createSlice({
   name: 'records',
   initialState: { records: [], isLoading: false },
@@ -18,7 +27,8 @@ const recordSlice = createSlice({
     builder
       .addCase(getRecords.pending, (state) => { state.isLoading = true; })
       .addCase(getRecords.fulfilled, (state, action) => { state.isLoading = false; state.records = action.payload; })
-      .addCase(getRecords.rejected, (state) => { state.isLoading = false; });
+      .addCase(getRecords.rejected, (state) => { state.isLoading = false; })
+      .addCase(clearRecords.fulfilled, (state) => { state.records = []; });
   }
 });
 
