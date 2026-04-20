@@ -28,7 +28,7 @@ const Layout = () => {
     { name: "Dashboard", icon: <LayoutDashboard size={20} />, path: "/" },
     { name: "Quests", icon: <Target size={20} />, path: "/quests" },
     { name: "Shop", icon: <ShoppingBag size={20} />, path: "/shop" },
-    { name: "Bad Habits", icon: <AlertTriangle size={20} />, path: "/badhabits" },
+    { name: "Bad Habits", icon: <AlertTriangle size={20} />, path: "/badhabits  " },
     { name: "Rules", icon: <Scale size={20} />, path: "/rules" },
     { name: "Records", icon: <History size={20} />, path: "/records" },
     { name: "Create", icon: <PlusSquare size={20} />, path: "/create" },
